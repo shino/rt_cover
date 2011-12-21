@@ -1,0 +1,12 @@
+{application, rt_cover,
+ [
+  {description, "Take coverage of applications at runtime"},
+  {vsn, "0.1.0"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { rt_cover_app, []}},
+  {env, []}
+ ]}.
