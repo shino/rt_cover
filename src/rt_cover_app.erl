@@ -16,9 +16,14 @@
 %% ===================================================================
 
 start(_StartType, _StartArgs) ->
-  Apps = [list_to_atom(App) ||
-           App <-string:tokens(os:getenv("RT_COVER_APPS"), ",")],
-  rt_cover:cover_compile(data_dir(), Apps),
+  case os:getenv("RT_COVER_APPS") of
+    false ->
+      ok;
+    AppsStr ->
+      Apps = [list_to_atom(App) ||
+               App <-string:tokens(AppsStr, ",")],
+      rt_cover:cover_compile(data_dir(), Apps)
+  end,
   rt_cover_sup:start_link().
 
 stop(_State) ->

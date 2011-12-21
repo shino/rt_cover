@@ -1,6 +1,6 @@
 -module(rt_cover).
 
--export([start/0]).
+-export([start/0, start/1]).
 -export([cover_compile/2,
          export_data/1,
          analyze/1]).
@@ -9,6 +9,17 @@
 
 start() ->
   application:start(rt_cover).
+
+start(Args) ->
+  ?debugVal({start, Args}),
+  case Args of
+    ["analyze" | _] ->
+      start(),
+      analyze(rt_cover_app:result_dir()),
+      init:stop();
+    _ ->
+      start()
+  end.
 
 cover_compile(_DataDir, []) ->
   ok;
