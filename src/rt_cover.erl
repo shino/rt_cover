@@ -1,7 +1,8 @@
 -module(rt_cover).
 
 -export([start/0, start/1]).
--export([cover_compile/2,
+-export([clean/2,
+         cover_compile/2,
          export_data/1,
          analyze/1]).
 
@@ -16,11 +17,21 @@ start(Args) ->
     ["analyze" | _] ->
       start(),
       analyze(rt_cover_app:result_dir()),
+      %% TODO(shino): export data after this call is completely useless.
+      %%              Maybe should just import files and should not start application?
+      init:stop();
+    ["clean" | _] ->
+      clean(rt_cover_app:data_dir(), rt_cover_app:result_dir()),
       init:stop();
     _ ->
       start()
   end.
 
+clean(DataDir, ResultDir) ->
+  os:cmd("rm -rf " ++ DataDir),
+  os:cmd("rm -rf " ++ ResultDir),
+  ok.
+  
 cover_compile(_DataDir, []) ->
   ok;
 cover_compile(DataDir, [App | Rest]) ->
